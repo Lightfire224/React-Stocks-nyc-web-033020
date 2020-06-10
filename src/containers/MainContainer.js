@@ -7,13 +7,20 @@ class MainContainer extends Component {
 
   state = {
     stocks: [],
-    portfolio: []
+    portfolioIds: []
   }
 
-  addToPortfolio = (stock) => {
-    console.log(stock)
+  addToPortfolio = (stockId) => {
     this.setState({
-      portfolio: [...this.state.portfolio, stock]
+        portfolioIds: [...this.state.portfolioIds, stockId]
+      })
+  }
+
+  removeFromPortfolio = (stockId) => {
+    //make a new list by making a new array, where each portfolioStock is not equal to the stock
+    //receieved from the handle click
+    this.setState({
+      portfolioIds: this.state.portfolioIds.filter(portfolioId => portfolioId !== stockId)
     })
   }
 
@@ -21,15 +28,17 @@ class MainContainer extends Component {
     fetch(`http://localhost:3000/stocks`)
       .then(response => response.json())
       .then(stocks => {
-        this.setState({stocks})
+        this.setState({ stocks })
       })
   }
 
-  componentDidMount(){
+  componentDidMount() {
     this.fetchAllStockData()
   }
 
   render() {
+    //arr of stox
+    let portfolio = this.state.portfolioIds.map(id => this.state.stocks.find(stock => id === stock.id))
     return (
       <div>
         <SearchBar />
@@ -37,7 +46,7 @@ class MainContainer extends Component {
         <div className="row">
           <div className="col-8">
 
-            <StockContainer 
+            <StockContainer
               stocks={this.state.stocks}
               addToPortfolio={this.addToPortfolio}
             />
@@ -45,7 +54,10 @@ class MainContainer extends Component {
           </div>
           <div className="col-4">
 
-            <PortfolioContainer />
+            <PortfolioContainer
+              portfolio={portfolio}
+              removeFromPortfolio={this.removeFromPortfolio}
+            />
 
           </div>
         </div>

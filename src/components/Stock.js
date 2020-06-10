@@ -15,19 +15,20 @@ import React from 'react'
 // when the div is clicked. Also, when it is clicked, we pass the entire stock object
 
 const Stock = (props) => (
+  //1 function referred to as dif names
 
   <div>
-      <div className="card" onClick={() => props.addToPortfolio(props)}>
-        <div className="card-body">
-          <h5 className="card-title">{
-              props.name
-            }</h5>
-          <p className="card-text">
-            {props.ticker}: {props.price}
-          </p>
-        </div>
+    <div className="card" onClick={() => props.handleClick(props.id)}>
+      <div className="card-body">
+        <h5 className="card-title">{
+          props.name
+        }</h5>
+        <p className="card-text">
+          {props.ticker}: {props.price}
+        </p>
       </div>
     </div>
+  </div>
 
 );
 

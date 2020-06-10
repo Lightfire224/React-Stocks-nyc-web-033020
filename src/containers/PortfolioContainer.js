@@ -5,12 +5,16 @@ class PortfolioContainer extends Component {
   state = {
     added: false
   }
+
   render() {
+    console.log(this.props.portfolio)
     return (
       <div>
         <h2>My Portfolio</h2>
           {
-            //render your portfolio stocks here
+            this.props.portfolio.map(portfolio => (
+              <Stock key={portfolio.id} {...portfolio} handleClick={this.props.removeFromPortfolio} />
+            ))
           }
       </div>
     );
