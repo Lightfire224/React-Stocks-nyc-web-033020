@@ -7,13 +7,15 @@ class MainContainer extends Component {
 
   state = {
     stocks: [],
-    portfolioIds: []
+    portfolioIds: [],
+    filterStockArrayOriginal: [],
+    radioValue: '',
   }
 
   addToPortfolio = (stockId) => {
     this.setState({
-        portfolioIds: [...this.state.portfolioIds, stockId]
-      })
+      portfolioIds: [...this.state.portfolioIds, stockId]
+    })
   }
 
   removeFromPortfolio = (stockId) => {
@@ -24,11 +26,36 @@ class MainContainer extends Component {
     })
   }
 
+  handleClick = (radioValue) => {
+    this.setState({ radioValue })
+    if (radioValue === "Alphabetically") {
+      this.state.stocks.sort((a, b) => a.name > b.name ? 1 : -1)
+    }
+    else if (radioValue === "Price") {
+      this.state.stocks.sort((a, b) => a.price > b.price ? 1 : -1)
+    }
+  }
+
+  handleOnChange = (industry) => {
+    if (industry !== "All") {
+      this.setState({
+        stocks: this.state.filterStockArrayOriginal.filter(stock => stock.type === industry)
+      })
+    }
+    else {
+      this.setState({
+        stocks: this.state.filterStockArrayOriginal
+      })
+    }
+  }
+
+
   fetchAllStockData = () => {
     fetch(`http://localhost:3000/stocks`)
       .then(response => response.json())
       .then(stocks => {
         this.setState({ stocks })
+        this.setState({ filterStockArrayOriginal: stocks })
       })
   }
 
@@ -38,10 +65,16 @@ class MainContainer extends Component {
 
   render() {
     //arr of stox
+    console.log(this.state.stocks)
     let portfolio = this.state.portfolioIds.map(id => this.state.stocks.find(stock => id === stock.id))
     return (
       <div>
-        <SearchBar />
+        <SearchBar
+          handleClick={this.handleClick}
+          radioValue={this.state.radioValue}
+          handleOnChange={this.handleOnChange}
+          dropDownChange={this.dropDownChange}
+        />
 
         <div className="row">
           <div className="col-8">
