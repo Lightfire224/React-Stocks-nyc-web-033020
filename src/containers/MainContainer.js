@@ -5,23 +5,50 @@ import SearchBar from '../components/SearchBar'
 
 class MainContainer extends Component {
 
+  state = {
+    stocks: [],
+    portfolio: []
+  }
+
+  addToPortfolio = (stock) => {
+    console.log(stock)
+    this.setState({
+      portfolio: [...this.state.portfolio, stock]
+    })
+  }
+
+  fetchAllStockData = () => {
+    fetch(`http://localhost:3000/stocks`)
+      .then(response => response.json())
+      .then(stocks => {
+        this.setState({stocks})
+      })
+  }
+
+  componentDidMount(){
+    this.fetchAllStockData()
+  }
+
   render() {
     return (
       <div>
-        <SearchBar/>
+        <SearchBar />
 
-          <div className="row">
-            <div className="col-8">
+        <div className="row">
+          <div className="col-8">
 
-              <StockContainer/>
+            <StockContainer 
+              stocks={this.state.stocks}
+              addToPortfolio={this.addToPortfolio}
+            />
 
-            </div>
-            <div className="col-4">
-
-              <PortfolioContainer/>
-
-            </div>
           </div>
+          <div className="col-4">
+
+            <PortfolioContainer />
+
+          </div>
+        </div>
       </div>
     );
   }
